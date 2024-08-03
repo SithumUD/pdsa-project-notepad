@@ -25,7 +25,7 @@ public class GUI implements ActionListener {
     JMenu menuFile, menuEdit, menuView, menuFormat, menuColor;
     JMenuItem iNew, iOpen, iSave, iSaveAs, iExit, iWrap, iFontArial, iFontCSMS, iFontTNR, iFontSize8, iFontSize12, iFontSize16, iFontSize20, iFontSize24, iFontSize28, iColor1, iColor2, iColor3;
     JMenuItem iUndo, iRedo;
-    JMenuItem iFindLine;
+    JMenuItem iFindLine, iFindWord;
     JMenu menuFont, menuFontSize;
 
     Function_File file = new Function_File(this);
@@ -228,6 +228,11 @@ public class GUI implements ActionListener {
         iFindLine.addActionListener(this);
         iFindLine.setActionCommand("findline");
         menuView.add(iFindLine);
+        
+        iFindWord = new JMenuItem("Find Word");
+        iFindWord.addActionListener(this);
+        iFindWord.setActionCommand("findword");
+        menuView.add(iFindWord);
     }
 
     @Override
@@ -296,6 +301,9 @@ public class GUI implements ActionListener {
                 break;
             case "findline":
                 view.findLine();
+                break;
+            case "findword":
+                view.findWord();
                 break;
         }
 

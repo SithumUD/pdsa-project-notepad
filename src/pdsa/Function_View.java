@@ -1,15 +1,27 @@
 package pdsa;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
+
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Function_View {
     GUI gui;
     ArrayList<Integer> lineStartOffsets = new ArrayList<>();
+    HashMap<String, ArrayList<Integer>> wordPositions = new HashMap<>();
 
     public Function_View(GUI gui) {
         this.gui = gui;
@@ -47,7 +59,7 @@ public class Function_View {
         Highlighter highlighter = textArea.getHighlighter();
         highlighter.removeAllHighlights();
         try {
-            highlighter.addHighlight(startOffset, endOffset, new DefaultHighlighter.DefaultHighlightPainter(java.awt.Color.YELLOW));
+            highlighter.addHighlight(startOffset, endOffset, new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -72,6 +84,79 @@ public class Function_View {
                 break;
             }
             lineStartOffset = lineEndOffset + 1;
+        }
+    }
+    
+    public void buildWordPositions() {
+        JTextArea textArea = gui.textArea;
+        String text = textArea.getText();
+        wordPositions.clear();
+        String[] words = text.split("\\W+"); // Split text into words
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            int index = text.indexOf(word);
+            while (index >= 0) {
+                wordPositions.computeIfAbsent(word, k -> new ArrayList<>()).add(index);
+                index = text.indexOf(word, index + word.length());
+            }
+        }
+    }
+
+    public void findWord() {
+        JFrame frame = new JFrame("Find Word");
+        frame.setSize(300, 150);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(new GridLayout(3, 1));
+
+        JTextField wordField = new JTextField();
+        JButton submitButton = new JButton("Submit");
+        JButton cancelButton = new JButton("Cancel");
+
+        frame.add(new JLabel("Enter the word to find:"));
+        frame.add(wordField);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(submitButton);
+        buttonPanel.add(cancelButton);
+        frame.add(buttonPanel);
+
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String wordToFind = wordField.getText();
+                buildWordPositions(); // Build the word positions map
+                highlightWord(wordToFind);
+                frame.dispose();
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
+
+        frame.setVisible(true);
+    }
+
+    private void highlightWord(String word) {
+        JTextArea textArea = gui.textArea;
+        Highlighter highlighter = textArea.getHighlighter();
+        highlighter.removeAllHighlights(); // Remove existing highlights
+
+        ArrayList<Integer> positions = wordPositions.get(word);
+        if (positions != null) {
+            for (int startOffset : positions) {
+                try {
+                    int endOffset = startOffset + word.length();
+                    highlighter.addHighlight(startOffset, endOffset, new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW));
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Word not found.");
         }
     }
 }
