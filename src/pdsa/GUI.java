@@ -2,6 +2,8 @@ package pdsa;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -27,6 +29,8 @@ public class GUI implements ActionListener {
     JMenuItem iUndo, iRedo;
     JMenuItem iFindLine, iFindWord;
     JMenu menuFont, menuFontSize;
+    
+    private static String lastWord = "";
 
     Function_File file = new Function_File(this);
     Function_Format format = new Function_Format(this);
@@ -73,15 +77,22 @@ public class GUI implements ActionListener {
 
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
+            	updateEditor();
                 view.updateLineStartOffsets();
             }
 
             public void removeUpdate(DocumentEvent e) {
+            	updateEditor();
                 view.updateLineStartOffsets();
             }
 
             public void changedUpdate(DocumentEvent e) {
                 view.updateLineStartOffsets();
+            }
+            
+            private void updateEditor() {
+                String newText = textArea.getText();
+                edit.setText(newText);
             }
         });
         
@@ -214,12 +225,12 @@ public class GUI implements ActionListener {
     public void createEditMenu() {
         iUndo = new JMenuItem("Undo");
         iUndo.addActionListener(this);
-        iUndo.setActionCommand("undo");
+        iUndo.setActionCommand("Undo");
         menuEdit.add(iUndo);
 
         iRedo = new JMenuItem("Redo");
         iRedo.addActionListener(this);
-        iRedo.setActionCommand("redo");
+        iRedo.setActionCommand("Redo");
         menuEdit.add(iRedo);
     }
 
@@ -293,11 +304,15 @@ public class GUI implements ActionListener {
             case "Blue":
                 color.changeColor(command);
                 break;
-            case "redo":
-                edit.redo();
+            case "Undo":
+                //edit.undo();
+            	String undoneText = edit.undo();
+                textArea.setText(undoneText);
                 break;
-            case "undo":
-                edit.undo();
+            case "Redo":
+                //edit.redo();
+            	String redoneText = edit.redo();
+                textArea.setText(redoneText);
                 break;
             case "findline":
                 view.findLine();
