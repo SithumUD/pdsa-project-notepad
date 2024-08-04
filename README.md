@@ -24,7 +24,7 @@ The Word Finder feature helps users search for specific words in the document. T
 ## Team Members
 
 - **Name : A S UDAYANGA**
-- **Student ID**: COHNDSE241F-089
+-- **Student ID**: COHNDSE241F-089
 
 - **Name : W T M DIAS**
 - **Student ID**: COHNDSE241F-087
