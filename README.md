@@ -27,7 +27,7 @@ The Word Finder feature helps users search for specific words in the document. T
 -- **Student ID**: COHNDSE241F-089
 
 - **Name : W T M DIAS**
-- **Student ID**: COHNDSE241F-087
+-- **Student ID**: COHNDSE241F-087
 
 ## Usage
 
