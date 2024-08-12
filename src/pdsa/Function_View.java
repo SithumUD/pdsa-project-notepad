@@ -91,7 +91,7 @@ public class Function_View {
         JTextArea textArea = gui.textArea;
         String text = textArea.getText();
         wordPositions.clear();
-        String[] words = text.split("\\W+"); // Split text into words
+        String[] words = text.split("\\W+"); 
 
         for (int i = 0; i < words.length; i++) {
             String word = words[i];

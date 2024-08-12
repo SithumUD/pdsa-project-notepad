@@ -14,11 +14,11 @@ public class Function_Edit {
     }
 
     public void setText(String newText) {
-        // Only push to undo stack if there's a change
+        
         if (!currentText.equals(newText)) {
             undoStack.push(currentText);
             currentText = newText;
-            //redoStack.clear(); // Clear redo stack on new operation
+            
         }
     }
 
